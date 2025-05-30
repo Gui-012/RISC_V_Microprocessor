@@ -18,8 +18,10 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
+ "[file normalize "$origin_dir/srcs/design/Memory_Interface.sv"]"\
  "[file normalize "$origin_dir/srcs/design/ALU.sv"]"\
  "[file normalize "$origin_dir/srcs/design/Register_File.sv"]"\
+ "[file normalize "$origin_dir/ip/BRAM_32bit/BRAM_32bit.xci"]"\
  "[file normalize "$origin_dir/srcs/testbench/Register_File_tb.sv"]"\
  "[file normalize "$origin_dir/srcs/testbench/ALU_tb.sv"]"\
   ]
@@ -149,7 +151,13 @@ set_property -name "simulator.xsim_version" -value "2024.2" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
 set_property -name "use_inline_hdl_ip" -value "1" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "1" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "1" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "1" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "1" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "1" -objects $obj
 set_property -name "webtalk.xsim_launch_sim" -value "29" -objects $obj
+set_property -name "xpm_libraries" -value "XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -159,12 +167,19 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
+ [file normalize "${origin_dir}/srcs/design/Memory_Interface.sv"] \
  [file normalize "${origin_dir}/srcs/design/ALU.sv"] \
  [file normalize "${origin_dir}/srcs/design/Register_File.sv"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/srcs/design/Memory_Interface.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
+set_property -name "library" -value "Memory_Interface" -objects $file_obj
+
 set file "$origin_dir/srcs/design/ALU.sv"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -184,7 +199,28 @@ set_property -name "library" -value "Register_File" -objects $file_obj
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "ALU" -objects $obj
+set_property -name "top" -value "Memory_Interface" -objects $obj
+
+# Set 'sources_1' fileset object
+set obj [get_filesets sources_1]
+set files [list \
+ [file normalize "${origin_dir}/ip/BRAM_32bit/BRAM_32bit.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/BRAM_32bit/BRAM_32bit.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+
+# Set 'sources_1' fileset file properties for local files
+# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {

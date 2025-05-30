@@ -62,7 +62,6 @@ class driver;
     mailbox driver_mailbox;
     register_transaction item;
     
-    // Constructor
     function new(mailbox gen_to_driver, virtual register_interface reg_intf);
         driver_mailbox = gen_to_driver;
         virtual_interface = reg_intf;    
@@ -99,7 +98,6 @@ class generator;
     mailbox generator_mailbox;
     register_transaction item;
     
-    // Constructor
     function new(mailbox gen_mailbox);
         // Assignes mailbox between generator and driver
         generator_mailbox = gen_mailbox;
@@ -181,7 +179,6 @@ class scoreboard;
     register_transaction reference[REGISTER_NUMBER];
     int error_count;
     
-    // Constructor
     function new(mailbox mon_to_scbd);
         scoreboard_mailbox = mon_to_scbd;
     endfunction
@@ -264,7 +261,6 @@ class environment;
     mailbox gen_to_driv;
     mailbox mon_to_scbd;
     
-    // Constructor
     function new(virtual register_interface reg_intf);
         // Construct and connect all components
         gen_to_driv = new();
