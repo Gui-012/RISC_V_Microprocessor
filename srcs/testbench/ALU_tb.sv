@@ -237,7 +237,7 @@ class environment;
             mon.run();
             scbd.run(); 
         join_any
-        wait(gen.count == scbd.compare_count);
+        wait(scbd.compare_count == gen.count);
         scbd.results();
         $finish;
     endtask
