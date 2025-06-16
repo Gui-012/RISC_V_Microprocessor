@@ -18,11 +18,6 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
- "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Control_Unit.sv"]"\
- "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Instruction_Memory.sv"]"\
- "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Program_Counter.sv"]"\
- "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Microprocessor.sv"]"\
- "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Microprocessor_Test.sv"]"\
  "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/sim_1/new/Microprocessor_tb.sv"]"\
  "[file normalize "$origin_dir/vivado_project/RISC_V_Microprocessor.srcs/utils_1/imports/synth_1/Memory_Interface.dcp"]"\
   ]
@@ -35,8 +30,12 @@ proc checkRequiredFiles { origin_dir} {
 
   set files [list \
  "[file normalize "$origin_dir/srcs/design/ALU.sv"]"\
+ "[file normalize "$origin_dir/srcs/design/Control_Unit.sv"]"\
+ "[file normalize "$origin_dir/srcs/design/Instruction_Memory.sv"]"\
  "[file normalize "$origin_dir/srcs/design/Memory_Interface.sv"]"\
+ "[file normalize "$origin_dir/srcs/design/Program_Counter.sv"]"\
  "[file normalize "$origin_dir/srcs/design/Register_File.sv"]"\
+ "[file normalize "$origin_dir/srcs/design/Microprocessor.sv"]"\
  "[file normalize "$origin_dir/ip/BRAM_32bit/mem_inti.coe"]"\
  "[file normalize "$origin_dir/ip/BRAM_32bit/BRAM_32bit.xci"]"\
  "[file normalize "$origin_dir/srcs/testbench/Memory_Interface_tb.sv"]"\
@@ -186,21 +185,15 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 set obj [get_filesets sources_1]
 set files [list \
  [file normalize "${origin_dir}/srcs/design/ALU.sv"] \
+ [file normalize "${origin_dir}/srcs/design/Control_Unit.sv"] \
+ [file normalize "${origin_dir}/srcs/design/Instruction_Memory.sv"] \
  [file normalize "${origin_dir}/srcs/design/Memory_Interface.sv"] \
+ [file normalize "${origin_dir}/srcs/design/Program_Counter.sv"] \
  [file normalize "${origin_dir}/srcs/design/Register_File.sv"] \
+ [file normalize "${origin_dir}/srcs/design/Microprocessor.sv"] \
  [file normalize "${origin_dir}/ip/BRAM_32bit/mem_inti.coe"] \
 ]
 add_files -norecurse -fileset $obj $files
-
-# Add local files from the original project (-no_copy_sources specified)
-set files [list \
- [file normalize "${origin_dir}/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Control_Unit.sv" ]\
- [file normalize "${origin_dir}/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Instruction_Memory.sv" ]\
- [file normalize "${origin_dir}/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Program_Counter.sv" ]\
- [file normalize "${origin_dir}/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Microprocessor.sv" ]\
- [file normalize "${origin_dir}/vivado_project/RISC_V_Microprocessor.srcs/sources_1/new/Microprocessor_Test.sv" ]\
-]
-set added_files [add_files -fileset sources_1 $files]
 
 # Set 'sources_1' fileset file properties for remote files
 set file "$origin_dir/srcs/design/ALU.sv"
@@ -209,11 +202,26 @@ set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
 set_property -name "library" -value "ALU" -objects $file_obj
 
+set file "$origin_dir/srcs/design/Control_Unit.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
+
+set file "$origin_dir/srcs/design/Instruction_Memory.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
+
 set file "$origin_dir/srcs/design/Memory_Interface.sv"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
 set_property -name "library" -value "Memory_Interface" -objects $file_obj
+
+set file "$origin_dir/srcs/design/Program_Counter.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
 
 set file "$origin_dir/srcs/design/Register_File.sv"
 set file [file normalize $file]
@@ -221,30 +229,14 @@ set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
 set_property -name "library" -value "Register_File" -objects $file_obj
 
+set file "$origin_dir/srcs/design/Microprocessor.sv"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
+
 
 # Set 'sources_1' fileset file properties for local files
-set file "new/Control_Unit.sv"
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
-set_property -name "library" -value "Control_Unit" -objects $file_obj
-
-set file "new/Instruction_Memory.sv"
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
-set_property -name "library" -value "Instruction_Memory" -objects $file_obj
-
-set file "new/Program_Counter.sv"
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
-
-set file "new/Microprocessor.sv"
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
-
-set file "new/Microprocessor_Test.sv"
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "SystemVerilog" -objects $file_obj
-
+# None
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]

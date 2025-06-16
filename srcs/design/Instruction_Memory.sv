@@ -26,8 +26,7 @@ module Instruction_Memory
     )
     (
         input logic[ADDRESS_SIZE-1:0] address,
-        output logic[INSTRUCTION_SIZE-1:0] instruction,
-        input wire clk
+        output logic[INSTRUCTION_SIZE-1:0] instruction
     );
     
     logic [INSTRUCTION_SIZE-1:0] memory[MEMORY_SIZE-1:0];

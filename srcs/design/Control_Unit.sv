@@ -8,7 +8,11 @@
 // Target Devices: Basys 3
 // Tool Versions: 
 // Description: Control Unit for the RISC-V Microprocessor project
-// 
+//              Module interprets instructions and sends control signals to route data
+//              It decodes de immediate value according to the instruction format
+//              'Select' signals are used to select the data path connected to a module
+//              For example, the reg_in_sel signal is used to select what is connected to the register input (eg. ALU result or RAM output)
+//              Additionally, module controls a halt state while RAM fetches data during a load operation
 // Dependencies: 
 // 
 // Revision:
@@ -57,6 +61,7 @@ module Control_Unit
     logic [1:0] wait_ = 0;
     logic [6:0] opcode = 7'b1111111;
     
+    // Wait state machine for load instruction delay
     always @(posedge clk) begin
         if(wait_flag)
             wait_++;
@@ -66,11 +71,12 @@ module Control_Unit
     
     // Instruction Interpreting
     always_comb begin
-    if(wait_ <= 0)
+    // Actions of each state in wait
+    if(wait_ <= 0) // Regular Instruction
         opcode = instruction[6:0];
-    else if(wait_ < LATENCY)
+    else if(wait_ < LATENCY) // During Wait Period
         opcode = WAIT_OPCODE;
-    else 
+    else  // End of Wait Period
         opcode = END_LOAD_OPCODE;
         
     case(opcode) // Opcode
@@ -224,8 +230,8 @@ module Control_Unit
                                 immediate = instruction[31:20];
                                 pc_select = 5;
                                 ALU_select = 0;
-                                ALU_function[2:0] = instruction[14:12]; //funct3
-                                ALU_function[3] = instruction[30]; // funct7 SUB select bit
+                                ALU_function[2:0] = instruction[14:12];
+                                ALU_function[3] = instruction[30];
                                 reg_in_select = 0; 
                                 reg_wr_en = 0;
                                 wait_flag = 1;
@@ -239,8 +245,8 @@ module Control_Unit
                                 immediate = instruction[31:20];
                                 pc_select = 0;
                                 ALU_select = 0;
-                                ALU_function[2:0] = instruction[14:12]; //funct3
-                                ALU_function[3] = instruction[30]; // funct7 SUB select bit
+                                ALU_function[2:0] = instruction[14:12];
+                                ALU_function[3] = instruction[30];
                                 reg_in_select = 0; 
                                 reg_wr_en = 0;
                                 wait_flag = 0;

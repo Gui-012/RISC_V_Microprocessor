@@ -8,7 +8,9 @@
 // Project Name: RISC-V Microprocessor
 // Target Devices: Basys 3
 // Tool Versions: 
-// Description: 
+// Description:  Top level module of the RISC-V Microprocessor Project
+//               This module contains the instances of the various components used 
+//               and connects them according to the control signals given.
 // 
 // Dependencies: 
 // 
@@ -46,8 +48,7 @@ module Microprocessor
    logic [WORD-1:0] Instruction;
    // Instantiate Instruction Memory
    Instruction_Memory Intruction_Mem(.address(PC_out),
-                                     .instruction(Instruction),
-                                     .clk(clk));
+                                     .instruction(Instruction));
     
     // Declare Buses for ALU
     logic [WORD-1:0] ALU_A;
