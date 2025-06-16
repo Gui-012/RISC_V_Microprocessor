@@ -33,7 +33,7 @@ module Register_File
     output logic [WORD-1:0] dataB_out // Data output B
 );
 
-logic [REGISTER_NUMBER-1:1][WORD-1:0] registers;
+logic [REGISTER_NUMBER-1:0][WORD-1:0] registers;
 
 // Read Operations
 always_comb begin
@@ -44,7 +44,6 @@ end
 // Write and Reset Operations
 always @(posedge clk) begin
     if(reset) begin
-        $display("In Register Reset");
         for(int i = 0; i < REGISTER_NUMBER; i++)
             registers[i] <= 32'h0;
     end
@@ -54,5 +53,5 @@ always @(posedge clk) begin
         end
     end
 end
-
+    
 endmodule
